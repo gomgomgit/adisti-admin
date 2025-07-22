@@ -5,7 +5,7 @@
       <div class="flex items-center justify-between">
         <div>
           <h1 class="text-2xl font-semibold text-gray-800">Conversation Dashboard</h1>
-          <p class="text-gray-600">Adisty Conversation History</p>
+          <p class="text-gray-600">Adisti Conversation History</p>
         </div>
         <div class="text-right">
           <p class="text-sm text-gray-600">Total Conversations</p>
@@ -84,7 +84,7 @@
                     </div>
                   </div>
                   <div class="ml-4 flex-1">
-                    <div class="text-sm font-medium text-gray-900">{{ conversation }}</div>
+                    <div class="text-sm font-medium text-gray-900">{{ formatConversationDisplay(conversation) }}</div>
                   </div>
                 </div>
                 <div class="flex items-center space-x-2">
@@ -108,7 +108,7 @@
       <div class="w-1/2 bg-white flex flex-col">
         <div class="p-4 border-b border-gray-200">
           <h2 class="text-lg font-semibold text-gray-800">
-            {{ selectedConversation ? `${selectedConversation.name}` : 'Select a conversation' }}
+            {{ selectedConversation ? formatConversationDisplay(selectedConversation.id) : 'Select a conversation' }}
           </h2>
         </div>
 
@@ -295,7 +295,7 @@ const notification = ref({
 })
 
 // API configuration
-const serverAddress = import.meta.env.VITE_API_URL || ''
+const serverAddress = import.meta.env.API_URL || ''
 console.log('Server address:', serverAddress)
 
 // Create axios instance with proxy configuration
@@ -322,6 +322,31 @@ const showNotificationMessage = (type, title, message) => {
 
 const hideNotification = () => {
   showNotification.value = false
+}
+
+// Format conversation display with datetime
+const formatConversationDisplay = (conversationId) => {
+  // Convert timestamp to Date object
+  const timestamp = parseInt(conversationId)
+  const date = new Date(timestamp)
+  
+  // Check if it's a valid date
+  if (isNaN(date.getTime())) {
+    // If not a valid timestamp, treat as regular ID
+    return `Conversation ${conversationId}`
+  }
+  
+  // Format the date to Indonesian locale
+  const formattedDateTime = date.toLocaleString('id-ID', {
+    day: '2-digit',
+    month: '2-digit', 
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  })
+  
+  return `Conversation ${formattedDateTime}`
 }
 
 // Fetch conversations from API
@@ -375,7 +400,7 @@ const showConversation = async (conversationId) => {
       
       selectedConversation.value = {
         id: response.data.conversation_id,
-        name: `Conversation ${response.data.conversation_id}`,
+        name: formatConversationDisplay(response.data.conversation_id),
         messages: formattedMessages
       }
       
@@ -398,7 +423,7 @@ const showConversation = async (conversationId) => {
     // Fallback to mock conversation data
     selectedConversation.value = {
       id: conversationId,
-      name: `Conversation ${conversationId}`,
+      name: formatConversationDisplay(conversationId),
       messages: [
         {
           id: 1,
