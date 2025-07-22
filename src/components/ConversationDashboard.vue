@@ -295,7 +295,7 @@ const notification = ref({
 })
 
 // API configuration
-const serverAddress = import.meta.env.API_URL || ''
+const serverAddress = import.meta.env.VITE_API_URL || ''
 console.log('Server address:', serverAddress)
 
 // Create axios instance with proxy configuration
