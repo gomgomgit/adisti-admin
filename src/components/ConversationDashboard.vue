@@ -326,27 +326,36 @@ const hideNotification = () => {
 
 // Format conversation display with datetime
 const formatConversationDisplay = (conversationId) => {
-  // Convert timestamp to Date object
-  const timestamp = parseInt(conversationId)
-  const date = new Date(timestamp)
+  const idString = conversationId.toString()
   
-  // Check if it's a valid date
-  if (isNaN(date.getTime())) {
-    // If not a valid timestamp, treat as regular ID
-    return `Conversation ${conversationId}`
+  // Check if it looks like a timestamp (10 or 13 digits)
+  // 10 digits = Unix timestamp in seconds
+  // 13 digits = Unix timestamp in milliseconds
+  if (idString.length === 10 || idString.length === 13) {
+    const timestamp = parseInt(conversationId)
+    
+    // Convert to milliseconds if it's in seconds (10 digits)
+    const timestampMs = idString.length === 10 ? timestamp * 1000 : timestamp
+    const date = new Date(timestampMs)
+    
+    // Check if it's a valid date
+    if (!isNaN(date.getTime())) {
+      // Format the date to Indonesian locale
+      const formattedDateTime = date.toLocaleString('id-ID', {
+        day: '2-digit',
+        month: '2-digit', 
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      })
+      
+      return `Conversation ${formattedDateTime}`
+    }
   }
   
-  // Format the date to Indonesian locale
-  const formattedDateTime = date.toLocaleString('id-ID', {
-    day: '2-digit',
-    month: '2-digit', 
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit'
-  })
-  
-  return `Conversation ${formattedDateTime}`
+  // If not a valid timestamp length or invalid date, return as is
+  return `Conversation ${conversationId}`
 }
 
 // Fetch conversations from API
