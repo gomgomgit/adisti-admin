@@ -48,10 +48,8 @@ Open your browser and navigate to: **http://localhost:5173**
 
 ## Features
 - 📋 View conversation list with timestamp formatting
-- 💬 Real-time chat interface
 - 🗑️ Delete conversations with confirmation modal
 - 🔄 Auto-refresh functionality
-- 📱 Responsive design
 - 🎨 Modern UI with Tailwind CSS
 
 ## Technology Stack
