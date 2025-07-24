@@ -57,7 +57,6 @@ Open your browser and navigate to: **http://localhost:5173**
 - **Build Tool**: Vite
 - **Styling**: Tailwind CSS
 - **HTTP Client**: Axios
-- **Icons**: Heroicons
 
 ## Project Structure
 ```
